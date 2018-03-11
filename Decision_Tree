@@ -1,0 +1,40 @@
+#case Study Decision Tree
+library(mlbench)
+require(mlbench)
+data("BreastCancer")
+BreastCancer=na.omit(BreastCancer)
+BreastCancer$Id=NULL
+train=sample(1:nrow(BreastCancer),0.7*nrow(BreastCancer))
+traindata=BreastCancer[train,]
+testdata=BreastCancer[-train,]
+#Creat model: creeat model using recursive partitionaing on the training data set
+install.packages('rpart')
+library(rpart)
+require(rpart)
+x.rp=rpart(Class~.,data=traindata)
+x.rp
+#predict classes for the evalution data set
+x.rp.pred=predict(x.rp,type="class",newdata =testdata)
+#Score the evalution data set(extract the probaility)
+x.rp.prob=predict(x.rp,type = "prob",newdata = testdata)
+#To view the decision tree, uncomment this line
+dev.new()  #develope a new window
+plot(x.rp,main="Decision tree fm rpart")
+#method2: creat model using conditional inference trees
+install.packages('party')
+library(party)
+x.ct=ctree(Class~.,data=traindata)
+x.ct.pred=predict(x.ct,testdata)
+x.ct.prob=1-unlist(treeresponse(x.ct,testdata),use.names = F)[seq(1,nrow(testdata)*2,2)]
+plot(x.ct)
+#Load the ROCR package which draws the ROC curves
+require(ROCR)
+#Creat an ROCR prediction object from rpart() probabilities
+x.rp.prob.rocr=prediction(x.rp.prob[,2],testdata$Class)
+#Prepare an ROCR performance object for ROC curve (tpr=true Positive rate,fpr=False Positive rate)
+x.rp.perf=performance(x.rp.prob.rocr,'tpr','fpr')
+#Plot
+dev.new()
+plot(x.rp.perf,col=2,main="ROC Curve")
+require(pROC)
+auc(testdata$Class,x.rp.prob[,2])
