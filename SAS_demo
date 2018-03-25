@@ -1,0 +1,88 @@
+data demo;
+set sashelp.demographics;
+run;
+
+proc contents data=demo;
+run;
+
+/*To see entire datasets*/
+
+proc print data=demo;
+run;
+
+proc print data=demo;
+var pop;
+run;
+
+/*to see multiple variable*/
+
+proc print data=demo;
+var pop popAgr;
+run;
+
+proc means data=demo;
+var pop;
+run;
+/*to know the descriptive statistic of the data*/
+
+proc means data=demo;
+run;
+/*calculating any specific statistic*/
+proc means data=demo mean median q3 range;
+var pop;
+run;
+/*for univariate analysis of a particular variable*/
+proc univariate data=demo;
+var pop;
+run;
+
+/*to know the frequency of data variables*/
+proc freq data=demo;
+table region;
+run;
+/*---------Data creation----------------------------------------------*/
+data details;
+input Name$ Age Gender$;
+datalines;
+David 24 M
+Katarina 30 F
+Miriam 41 F
+Natalia 40 F
+Jerry 50 M
+Dan 80 M
+Richard 75 M
+Keseniia 23 F
+;
+run;
+/*-----To select required data-----------------------*/
+proc print data=demo;
+where pop between 1000000 and 2000000;
+run;
+/*extracting data as per our requirement*/
+proc print data=demo;
+where adolescentfpyear is missing;
+run;
+/*To filter the rewuired name*/
+proc print data=demo;
+where name like 'I%';
+run;
+/*Conditional statement*/
+data demo1;
+set sashelp.demographics;
+if region='AMR' then region_code=1;
+run;
+
+data demo;
+set sashelp.demographics;
+if region='AMR' & pop>=1000000 then reg_code=1;
+run;
+/*sorting data*/
+proc sort data=demo out=demo_sort;
+by descending pop;   /*default is ascending: by pop*/
+run;
+/*removing the duplicates*/
+data one;
+infile datalines dlm=',';
+input ;
+datalines;
+
