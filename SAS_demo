@@ -86,3 +86,30 @@ infile datalines dlm=',';
 input ;
 datalines;
 
+/*using proc means and proc freq*/
+data demo;
+set sashelp.demographics;
+run;
+proc means data=demo;
+run;
+proc freq data=demo;
+run;
+
+proc means data=SASHELP.demographics min max;
+var popAGR;
+class region;
+by isoname;
+run;
+
+proc sort data=demo;
+by descending pop;
+run;
+
+proc summary data=sashelp.demographics;
+var popAGR;
+class region;
+output out=Means_Summary
+mean=Avg_popAGR min=Min_popAGR;
+run;
+proc print data=means_summary;
+run;
