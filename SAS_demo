@@ -113,3 +113,64 @@ mean=Avg_popAGR min=Min_popAGR;
 run;
 proc print data=means_summary;
 run;
+
+
+/*Dataset1*/
+data A;
+input EmpID $ Name $;
+datalines;
+E00634 Strauss
+E01483 Lee
+E01996 Nick
+E04064 Waschk
+;
+run;
+
+data B;
+input EmpID $ Flight $;
+datalines;
+E04064  5105
+E00632  5250
+E01996  5501
+;
+run;
+
+proc sort data=B;
+by EmpID;
+run;
+
+data C;
+merge A (in=a) B (in=b);
+by EmpID;
+if A and B;
+run;
+proc print data=C;
+run;
+
+/*Dataset2*/
+data one;
+input X Y $;
+datalines;
+1 A
+2 B
+3 C
+;
+run;
+
+data two;
+input X E $;
+datalines;
+1 A1
+1 A2
+2 B1
+3 C1
+4 C2
+;
+run;
+
+data three;
+merge one two;
+by X;
+run;
+proc print data=three;
+run;
