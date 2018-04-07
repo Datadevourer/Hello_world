@@ -174,3 +174,122 @@ by X;
 run;
 proc print data=three;
 run;
+
+proc freq data=cars;
+table make;
+run;
+
+proc freq data=cars;
+table make*type/nopercent norow;
+run;
+
+data C;
+input Num Var $;
+datalines;
+1 C1
+2 C2
+2 C3
+3 C4
+;
+run;
+
+data D;
+input Num Var $;
+datalines;
+2 D1
+3 D2
+3 D3
+;
+run;
+
+data E;
+set C D;
+by Num;
+run;
+
+proc print data=E;
+run;
+/*-----------------------------------------------------*/
+
+data emp_add;
+infile datalines dlm=' ';
+length empname $ 15.;
+input empname $ City $ Country $;
+datalines;
+AbbottRay Jamaica WI
+AisbittSandy Melbourne AU
+Akinfolarin Trinidad WI
+AngerRose Philadelphia US
+AnsteyDavid Miami-Dade US
+AntoniniDoris Miami-Dade US
+AprNishan SanDiego US
+ArdskinElizabeth Miami-Dade US
+AreuJeryl Miami-Dade US
+ArizmendiGilbert SanDiego US
+ArmantDebra SanDiego US
+;
+run;
+
+proc print data=emp_add;
+run;
+
+data usa australia other;
+set emp_add;
+if country='AU' then output Australia;
+else if country='US' then output USA;
+else output other;
+run;
+
+title 'Employee in the United States';
+
+proc print data=usa;
+run;
+
+title 'Employee in Australia';
+
+proc print data=australia;
+run;
+/*----------------------------------------------------*/
+ data usa australia other;
+ set orion.employee_addresses;
+ select (Country);
+ when('US') output usa;
+ when('AU') output australia;
+ otherwise output other;
+ end;
+ run;
+ /*----------------------------------------------------------------*/
+
+data name;
+set sashelp.employees;
+infile datalines dlm=' '
+length Employee_Name $ 20
+input Employee_ID $ Full_Name $ Title $ Birth_Date $ Hire_Date;
+datalines;
+1 Ms.DavolioNancy Sales Representative 
+
+run;
+
+
+
+
+/*--------------------------------------*/
+data employee1;
+set work.employees;
+Title_Of_Courtesy=scan(Full_Name,1);
+First_Name=scan(Full_Name,2);
+last_Name=scan(Full_Name,3);
+run;
+
+data employees1;
+set work.employees;
+Last_Initial=Substr(Last_Name,1,1);
+run;
+proc print data=employees;
+run;
+/*-----------------------------------------*/
+
+data employees;
+set Work.employees;
+Last_Initial=Substr(LastName,1,1);
+run;
