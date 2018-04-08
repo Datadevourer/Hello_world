@@ -293,3 +293,158 @@ data employees;
 set Work.employees;
 Last_Initial=Substr(LastName,1,1);
 run;
+
+
+/*----tranwrd()---------*/
+data demo_NAME4;
+set sashelp.demographics;
+run;
+
+data demo_NAME4;
+set demo;
+Name1=tranwrd(region,'AMR','America');
+run;
+
+proc print data=demo_NAME4;
+run;
+
+/*-------trim() and concatination---------*/
+data abc;
+input name $;
+datalines;
+Hyd
+Mumbai
+Bangalore
+India
+;
+run;
+
+proc print data=abc;
+run;
+
+data demo_NAME5; 
+run;
+
+proc print data=demo_NAME5;
+run;
+
+data demo_NAME5;
+set demo;
+Address=trim(NAME)||','||trim(REGION);
+run;
+
+proc print data=demo_NAME5;
+run;  
+
+/*-------------index()-----------*/
+data demo_NAME6;
+set demo;
+if index(UPCASE(name),'IIT')>0;
+run;
+proc print data=demo_NAME6;
+run;
+
+/*-----------Numeric function------------*/
+
+data demo_NAME8;
+set demo_NAME4;
+int=int(totalFR);
+run;
+proc print data=demo_NAME8;
+run;
+
+data demo_NAME8;
+set demo;
+round1=round(totalFR,0.25);
+round2=round(totalFR,0.5);
+run;
+proc print data=demo_NAME8;
+run;
+
+data ceil;
+var=round(10.4);
+var1=round(10.4);
+var2=round(10.4);
+run;
+proc print data=ceil;
+run;
+
+data demo9;
+set sashelp.demographics;
+tot_pop=sum(pop);
+run;
+proc print data=demo9;
+run;
+
+/*-------------date function-------------*/
+data date;
+date=today();
+weekday=weekday(date);
+run;
+
+proc print data=date;
+run;
+
+proc print data=date;
+format data date8.;
+run;
+
+data conversions;
+var1=614;
+var2=55000;
+var3=366;
+cvar1=put(var1,3.);
+cvar2=put(var2,dollar7.);
+cvar3=put(var3,data9.);
+run;
+proc print data=conversions;
+run;
+
+/*------calculating interest--------*/
+data Earnings;
+Amount=1000;
+Rate=.075/12;
+do month=1to 12;
+Earned+=(amount+earned)*(rate);
+output;
+end;
+run;
+proc print data=Earnings;
+run;
+
+data work.earn;
+Value=2000;
+do year=1 to 20;
+interest=value*.075;
+value+interest;
+output;
+end;
+proc print data=work.earn;
+run;
+
+
+data mother;
+input MID CID1 AGE1 SEX1$ CID2 AGE2 SEX2$ CID3 AGE3 SEX3$;
+datalines;
+1 1 2 f 2 5 m 3 10 f 
+2 1 10 m 2 12 m 3 13 f
+3 17 f 2 20 f 3 23 m
+ ;
+run;
+
+
+data child(keep=mid cid age sex);
+set mother;
+length child age sex$ 1;
+array c(1:3) cid1-cid3;
+array a(1:3) age1-age3;
+array s(1:3) sex1-sex3;
+do i=1 to 3;
+cid=c(i);
+age=a(i);
+sex=s(i);
+if not missing(cid) then output;
+end;
+run;
+proc print data=child;
+run;
