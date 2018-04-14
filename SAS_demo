@@ -448,3 +448,83 @@ end;
 run;
 proc print data=child;
 run;
+
+
+data dosing;
+length med $1. unit $2.;
+input patient date med $ doses amt unit $;
+datalines;
+102 15186 A 2 1.2 mg
+102 15193 A 3 1.0 mg
+103 15180 B 3 3.5 mg
+103 15187 B 3 3.5 mg
+104 15223 A 2 1.5 mg
+;
+run;
+proc print data=dosing;
+run;
+
+data vital;
+input patient date:date9. pulse temp bps bpd;
+datalines;
+101 25May2001  2 98.5 130 88
+101 01Jun2001 5 98.6 133 92
+102 30Jul2001  1 99.0 141 93
+102 13Aug2001  8 98.7 142 93
+103 07Aug2001  8 98.6 140 80
+;
+run;
+proc print data=vital;
+format date date9.;
+run;
+
+/*inner join*/
+proc sql;
+CREATE TABLE new AS
+Select a.patient,
+a.date,
+a.med,
+b.pulse,
+b.temp
+From dosing as a, vital as b
+Where a.patient=b.patient
+And a.date=b.date;
+quit;
+
+/*let join*/
+Proc sql;
+Create table new1 AS
+Select a.patient,
+a.date,
+a.med,
+b.pulse,
+b.temp
+From dosing as a LEFT JOIN vital as b
+ON a.patient=b.patient
+AND a.date=b.date;
+Quit;
+/*right join*/
+proc sql;
+Create table new2 AS
+Select a.patient,
+a.date,
+a.med,
+b.pulse,
+b.temp
+From dosing as a RIGHT JOIN vital as b
+ON a.patient=b.patient
+AND a.date=b.date;
+quit;
+
+/*full join*/
+proc sql;
+Create table new3 AS
+Select a.patient,
+a.date,
+a.med,
+b.pulse,
+b.temp
+From dosing as a Full join vital as b
+ON a.patient=b.patient
+AND a.date=b.date;
+quit;
