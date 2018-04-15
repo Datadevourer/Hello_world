@@ -528,3 +528,18 @@ From dosing as a Full join vital as b
 ON a.patient=b.patient
 AND a.date=b.date;
 quit;
+
+
+data demo;
+set sashelp.demographics;
+run;
+/*'let' method*/
+%let region='AMR';
+proc print data=demo;
+where region=&region;
+run;
+
+proc freq data=demo;
+table region;
+where region=&region;
+run;
