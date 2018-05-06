@@ -1,0 +1,44 @@
+#Required Pythone packages
+import numpy as np
+from sklearn.cross_validation import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+from sklearn import tree
+
+### Loading DatasetPython
+Data=pd.read.csv('C:\\Users\\SUDEEP\Desktop\\Breastcancer.csv')
+##Dataset Shape
+len(Data)
+Data.shape
+
+##Dataset Slicing
+x=Data.values[:,0:9]
+y=Data.values[0:,9]
+
+###Spliting Data into train and test data
+x_train, x_test, y_train, y_test=train_test_split(x,y,test_size=0.3,random_state=100)
+
+##DecisionTree with Gini Index
+gini=DecisionTreeClassifier(criterion='gini',random_state=100,max_depth=3,min_sample_leaf=5)
+gini.fit(x_train,y_train)
+
+###DecisionTree with Information gain
+entropy=DecisionTreeClassifier(criterion='entropy',random_state=100,max_depth=3,min_sample_leaf=5)
+entropy.fit(x_train,y_train)
+
+###Gini Index Prediction with test dataset
+y_pred=gini.predict(x_test)
+y_pred_en
+
+####Gini Index Accuracy Score
+accuracy_score(y_test,y_pred)*100
+cnf_matrix=confusion_matrix(y_test,y_pred)
+print(cnf_matrix)
+###Information Gain accuracy score
+accuracy_score(y_test,y_pred_en)*100
+
+import graphviz
+from sklearn.tree import export_graphviz
+dot_data=tree.export_graphviz(gini,out_file='tree.dot')
+graph=graphviz.Source(dot_data)
+graph
